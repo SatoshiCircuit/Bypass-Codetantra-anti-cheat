@@ -42,8 +42,8 @@ Follow these steps to install and use the script:
 
 ## Authors
 
-- **SatoshiaCircuit**
-- **RBLakshya**
+- **@SatoshiaCircuit**
+- **@RBLakshya**
 
 ## Version
 
