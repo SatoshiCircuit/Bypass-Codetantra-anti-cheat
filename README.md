@@ -1,54 +1,50 @@
-# Bypass Codetantra Anti-Cheat
+# CodeTantra Anti-AntiCheat (v2.0)
 
-This user script disables the fullscreen and window-switching restrictions on the Codetantra platform, allowing users to exit fullscreen mode and switch windows without detection. It achieves this by overriding event listeners and properties related to focus, fullscreen, and visibility.
+This user script empowers you to enhance your CodeTantra experience by:
 
-## Features
+- **Enabling Text Selection and Copying:** Freely copy text within CodeTantra's platform.
+- **Maintaining Control of Fullscreen and Window Switching:** Exit fullscreen mode and switch between CodeTantra windows without triggering tracking mechanisms.
+- **Improved Privacy:** Mitigate potential tracking of cursor movements and visibility state changes.
 
-- Prevents Codetantra from detecting:
-  - Window/tab switching
-  - Exiting fullscreen
-  - Mouse leave or mouseout events
-- Overrides document properties like `visibilityState` and `fullscreenElement`.
-- Enforces persistent focus.
+**Disclaimer:**
 
-## Installation
+**Please note:** This script is for educational purposes only and may violate CodeTantra's terms of service. Use it responsibly and at your own risk. CodeTantra might implement countermeasures to prevent such scripts from functioning. 
 
-Follow these steps to install and use the script:
+**Installation:**
 
-### Prerequisites
+1. **Greasemonkey or Tampermonkey:** Install a browser extension like Greasemonkey (Firefox) or Tampermonkey (Chrome) if you haven't already.
+2. **Install Script:** Click "Raw" next to the "Code" button on GitHub, copy the script content, and create a new script within your extension.
+3. **Enable Script:** Activate the script for CodeTantra websites using the extension's management interface.
 
-1. **Tampermonkey** (or a similar userscript manager) must be installed in your browser.
-   - [Tampermonkey for Chrome/Chromimum based browsers](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-   - [Tampermonkey for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
-   - [Tampermonkey for Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+**Features:**
 
-### Installation Steps
+- **Enable Text Selection and Copying:**
+  - Injects a CSS style rule to enable text selection across the entire page.
+  - Re-enables disabled event listeners for copying and cutting.
+- **Prevent Fullscreen Detection and Control:**
+  - Overwrites the `document.fullscreenElement` property to always return `null`, preventing fullscreen detection.
+  - Replaces the `document.exitFullscreen`, `document.requestFullscreen`, and `HTMLElement.prototype.requestFullscreen` methods with no-op functions, rendering them inoperable.
+- **Mitigate Cursor Movement Tracking:**
+  - Attaches event listeners (`mousemove`, `mouseenter`, `mouseleave`) to the document, preventing event propagation and potentially hindering tracking of cursor movements.
+- **Block Visibility State Changes:**
+  - Overrides the `document.visibilityState` property to always return "visible".
+  - Overwrites the `document.hidden` property to always return `false`.
+  - Attaches an event listener for `visibilitychange` events to prevent their propagation.
 
-1. Open Tampermonkey's dashboard in your browser.
-2. Click on the `+` icon to create a new script.
-3. Copy and paste the contents of the script (`Bypass Codetantra anti-cheat.js`) into the editor.
-4. Save the script by clicking on `File > Save` or pressing `Ctrl + S`.
-5. Ensure the script is enabled in Tampermonkey.
+**Technical Details:**
 
-### Usage
+- **Userscript:** Leverages the Userscript standard for cross-browser compatibility.
+- **Event Listeners:** Employs event listeners to intercept and stop propagation of certain events.
+- **JavaScript Properties:** Overrides specific JavaScript properties to achieve desired behavior.
 
-1. Navigate to the [Codetantra website](https://www.codetantra.com).
-2. The script will automatically activate, blocking anti-cheat measures.
+**Additional Notes:**
 
-## Disclaimer
+Be aware that CodeTantra might implement countermeasures against such scripts. It's crucial to respect CodeTantra's terms of service and use this script responsibly.
 
-- This script is provided for educational purposes only. Use it responsibly and ensure compliance with any relevant policies or regulations.
-- The authors of this script are not responsible for any consequences arising from its use.
+**Feedback and Contribution:**
 
+Feel free to submit suggestions or contributions via pull requests on GitHub.
 ## Authors
 
 - **@SatoshiaCircuit**
 - **@RBLakshya**
-
-## Version
-
-**1.6**
-
-## License
-
-This script is open-source. Feel free to modify and distribute it under the terms of your choosing.
