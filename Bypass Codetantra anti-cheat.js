@@ -1,82 +1,94 @@
 // ==UserScript==
-// @name         Bypass Codetantra anti-cheat
-// @namespace    http://tampermonkey.net/
-// @version      1.6
-// @description  Use this script to disable the full screen and window switch blocking in Codetantra, this is done by blocking the focus, screen change, events, as well as the cursor moving.
-// @match        *://*.codetantra.com/*
+// @name         CodeTantra Anti-Anti Cheat
+// @namespace    CT Anti-Anti Cheat
+// @version      2.0
+// @description  Allow you to exit full screen, and switch codetantra windows without being tracked and let you copy text in codetantra.
 // @author       SatoshiaCircuit & RBLakshya
+// @match        *://*.codetantra.com/*
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
-    const blockedEvents = ['visibilitychange', 'blur', 'focus', 'fullscreenchange', 'mouseleave', 'mouseout'];
-    const originalAddEventListener = EventTarget.prototype.addEventListener;
-    EventTarget.prototype.addEventListener = function(type, listener, options) {
-        if (blockedEvents.includes(type)) {
-            console.log(`Blocked event listener for: ${type}`);
-            return;
-        }
-        return originalAddEventListener.call(this, type, listener, options);
-    };
-    const originalRemoveEventListener = EventTarget.prototype.removeEventListener;
-    EventTarget.prototype.removeEventListener = function(type, listener, options) {
-        if (blockedEvents.includes(type)) {
-            console.log(`Blocked removal of listener for: ${type}`);
-            return;
-        }
-        return originalRemoveEventListener.call(this, type, listener, options);
-    };
-    function overrideDocumentProperties() {
-        Object.defineProperty(document, 'visibilityState', {
-            get: () => 'visible',
-            configurable: true,
-        });
 
-        Object.defineProperty(document, 'hidden', {
-            get: () => false,
-            configurable: true,
-        });
+    // Enable Copy Mode
+    var css = document.createElement('style');
+    var head = document.head;
+    css.type = 'text/css';
+    css.innerText = `* {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+    }`;
 
-        Object.defineProperty(document, 'fullscreenElement', {
-            get: () => null,
-            configurable: true,
-        });
-
-        Object.defineProperty(document, 'webkitIsFullScreen', {
-            get: () => false,
-            configurable: true,
-        });
-
-        Object.defineProperty(document, 'mozFullScreen', {
-            get: () => false,
-            configurable: true,
-        });
+    function enableCopyMode() {
+        var doc = document;
+        var body = document.body;
+        var docEvents = [
+            doc.oncontextmenu = null,
+            doc.onselectstart = null,
+            doc.ondragstart = null,
+            doc.onmousedown = null
+        ];
+        var bodyEvents = [
+            body.oncontextmenu = null,
+            body.onselectstart = null,
+            body.ondragstart = null,
+            body.onmousedown = null,
+            body.oncut = null,
+            body.oncopy = null,
+            body.onpaste = null
+        ];
+        [].forEach.call(
+            ['copy', 'cut', 'paste', 'select', 'selectstart'],
+            function(event) {
+                document.addEventListener(event, function(e) { e.stopPropagation(); }, true);
+            }
+        );
+        head.appendChild(css);
     }
-    function enforcePersistentFocus() {
-        window.focus();
-        document.hasFocus = () => true;
 
-        const fakeFocusEvent = new Event('focus');
-        window.dispatchEvent(fakeFocusEvent);
-        console.log("Simulated persistent focus to prevent tab switch detection");
-    }
-    function preventMouseLeaveDetection() {
-        document.addEventListener('mouseleave', (event) => {
-            event.stopImmediatePropagation();
-            console.log("Blocked mouseleave event");
-        }, true);
+    // Call the enable copy mode function
+    enableCopyMode();
 
-        document.addEventListener('mouseout', (event) => {
-            event.stopImmediatePropagation();
-            console.log("Blocked mouseout event");
-        }, true);
-    }
-    setInterval(() => {
-        overrideDocumentProperties();
-        enforcePersistentFocus();
-        preventMouseLeaveDetection();
-    }, 200);
+    // Prevent fullscreen detection
+    Object.defineProperty(document, 'fullscreenElement', {
+        get: () => null
+    });
 
-    console.log("Enhanced Anti-Tracking script running on CodeTantra");
+    // Override Fullscreen API methods
+    const noop = () => {};
+    document.exitFullscreen = noop;
+    document.requestFullscreen = noop;
+    HTMLElement.prototype.requestFullscreen = noop;
+
+    // Prevent cursor movement tracking
+    document.addEventListener('mousemove', (event) => {
+        event.stopImmediatePropagation();
+    }, true);
+
+    document.addEventListener('mouseenter', (event) => {
+        event.stopImmediatePropagation();
+    }, true);
+
+    document.addEventListener('mouseleave', (event) => {
+        event.stopImmediatePropagation();
+    }, true);
+
+    // Block visibility state changes
+    Object.defineProperty(document, 'visibilityState', {
+        get: () => 'visible'
+    });
+
+    Object.defineProperty(document, 'hidden', {
+        get: () => false
+    });
+
+    // Prevent visibility change event
+    document.addEventListener('visibilitychange', (event) => {
+        event.stopImmediatePropagation();
+    }, true);
+
+    console.log('Codetantra tracking protection with enable copy mode activated.');
 })();
