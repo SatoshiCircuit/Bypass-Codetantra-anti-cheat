@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Codetantra anti-anti cheat
+// @name         CodeTantra Anti-Anti Cheat
 // @namespace    http://tampermonkey.net/
-// @version      1.6
-// @description  Codetantra anti-cheat bypass
+// @version      3.0
+// @description  Blocks tracking events and UI elements
 // @match        *://*.codetantra.com/*
 // @author       RBLakshya
 // @grant        none
@@ -85,12 +85,29 @@
         }, true);
     }
 
+    // Function to hide specific elements like Ublock Origin
+    function hideTrackingElements() {
+        const selectors = [
+            '#countUpModal > .modal-sm.modal-dialog > .modal-content > .modal-body',
+            '#countUpModal'
+        ];
+
+        selectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+                el.style.display = 'none';
+                console.log(`Hid element: ${selector}`);
+            });
+        });
+    }
+
     // Apply overrides and block events at frequent intervals
     setInterval(() => {
         overrideDocumentProperties();
         enforcePersistentFocus();
         preventMouseLeaveDetection();
+        hideTrackingElements();
     }, 200);  // Every 200ms to stay ahead of reattachments
 
-    console.log("Enhanced Anti-Tracking script running on CodeTantra");
+    console.log("Enhanced Anti-Tracking script running on CodeTantra and CodeChef");
 })();
