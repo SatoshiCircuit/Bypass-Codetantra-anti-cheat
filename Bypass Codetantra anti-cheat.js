@@ -4,7 +4,7 @@
 // @version      3.0
 // @description  Blocks tracking events and UI elements
 // @match        *://*.codetantra.com/*
-// @author       RBLakshya
+// @author       RBLakshya & SatoshiCircuit
 // @grant        none
 // ==/UserScript==
 
